@@ -1,0 +1,1 @@
+from .problems.maximal_independent_set import MaximalIndependentSet
