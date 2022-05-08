@@ -63,6 +63,7 @@ class MaximumKColorableSubgraph(Problem):
         )
 
         # TODO: figure out how to use damn slack variables for inequalities
+        #       glover paper has a basic explanation
 
         # hamiltonian += sum(
         #
