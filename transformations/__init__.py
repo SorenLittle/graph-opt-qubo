@@ -1,2 +1,3 @@
 from .problems.maximal_independent_set import MaximalIndependentSet
 from .problems.maximum_flow import MaximumFlow
+from .problems.minimal_spanning_tree import MinimalSpanningTreeDegreeConstraint
