@@ -3,3 +3,6 @@ networkx
 qubovert
 dimod
 dwave_qbsolv
+pytest
+hypothesis
+hypothesis_networkx

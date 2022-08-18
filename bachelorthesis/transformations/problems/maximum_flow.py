@@ -5,7 +5,7 @@ from networkx import DiGraph
 from numpy import zeros
 from numpy.typing import NDArray
 
-from transformations.problem import Problem
+from bachelorthesis.transformations.problem import Problem
 
 
 class MaximumFlow(Problem):

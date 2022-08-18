@@ -6,7 +6,7 @@ from numpy import zeros
 from numpy.typing import NDArray
 import qubovert as qv
 
-from transformations.problem import Problem
+from bachelorthesis.transformations.problem import Problem
 
 
 class MaximumKColorableSubgraph(Problem):
