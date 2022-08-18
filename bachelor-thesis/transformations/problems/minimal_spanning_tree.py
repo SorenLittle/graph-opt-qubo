@@ -8,29 +8,35 @@ import qubovert as qv
 from transformations.problem import Problem
 
 
-class MaximalIndependentSet(Problem):
+class MinimalSpanningTreeDegreeConstraint(Problem):
     def __init__(
             self,
-            graph: Graph
+            graph: Graph,
+            delta: int
     ):
-        """The Maximal Independent Set Problem
+        """The Minimal Spanning Tree Problem
 
         Parameters
         ----------
         graph
             A networkx graph of the problem instance
+
+        delta
+            The maximal degree constraint
         """
 
         self.graph: Graph = graph
+        self.delta: int = delta
 
     def gen_qubo(self) -> NDArray:
+
         n = self.graph.order()
 
         # create list of variable names in order to ensure correct mapping
         var_names: List[str] = [
             f'x({node})'
             for node in range(n)
-        ]
+        ]  # TODO: this needs Ergänzung
 
         # create list of QUBO variables for use in the hamiltonian
         x: List[qv.QUBO] = [
@@ -40,15 +46,25 @@ class MaximalIndependentSet(Problem):
             for node in range(n)
         ]
 
+
+        # set scaling constants according to heuristic in paper
+        a: float = 1  # TODO
+        b: float = 1  # TODO
+
+        # TODO: nothing new past here!!
+
         # create hamiltonian of the problem
         hamiltonian = qv.QUBO()
-        hamiltonian += - sum(
-            x[i]
-            for i in self.graph.nodes
-        ) + sum(
-            x[i] * x[j]
-            for i, j in self.graph.edges
+        hamiltonian_a = (
+            a * (1 - sum(...)) ** 2 +
+            a * sum(...) ** 2 +
+            a * sum(...) ** 2 +
+            a * sum(...) ** 2 +
+            a * sum(...) ** 2 +
+            a * sum(...)
         )
+
+        hamiltonian_b = b * sum(...)
 
         hamiltonian.set_mapping(
             {var_names[i]: i for i in range(len(var_names))}
