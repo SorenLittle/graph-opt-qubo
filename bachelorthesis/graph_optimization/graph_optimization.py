@@ -41,11 +41,20 @@ class GraphOptimization:
 
         qubo: NDArray = zeros((self.n * positions, self.n * positions))
 
+        print(kwargs)
+
         # populate the qubo with constraints
+        self._add_structure_constraints(
+            qubo=qubo,
+            positions=positions,
+            start_node=start_node,
+            terminal_node=terminal_node,
+            **kwargs
+        )
 
         return qubo
 
-    def _structure_constraints(
+    def _add_structure_constraints(
         self,
         qubo: NDArray,
         positions: int,
@@ -57,6 +66,7 @@ class GraphOptimization:
         nodes_with_edges: float = None,
         one_node_many_positions: float = None,
         one_position_many_nodes: float = None,
+        **kwargs
     ):
         """Handles constraints related to graph structure (not edges)"""
 

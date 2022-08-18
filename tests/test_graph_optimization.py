@@ -1,3 +1,0 @@
-"""Tests that GraphOptimization generates correct qubos"""
-
-...
