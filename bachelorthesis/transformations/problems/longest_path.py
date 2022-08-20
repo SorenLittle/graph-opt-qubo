@@ -1,4 +1,4 @@
-"""Transformation of the Longest Path Problem"""
+"""QUBO Formulation of the Longest Path Problem"""
 import itertools
 from typing import List
 
