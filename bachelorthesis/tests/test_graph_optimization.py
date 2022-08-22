@@ -87,7 +87,7 @@ class TestGraphOptimization:
         graph_coloring_constraints = {
             "diagonal": -a,
             "one_node_many_positions": 2 * a,
-            "score_edges": a,
+            "edges": a,
         }
         ours = g_opt.generate_qubo(
             positions=params["colors"], **graph_coloring_constraints
