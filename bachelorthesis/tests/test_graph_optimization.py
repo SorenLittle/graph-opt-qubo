@@ -19,6 +19,7 @@ from bachelorthesis.tests.problem_parameters import (
     traveling_salesperson_params,
 )
 from bachelorthesis.transformations.problems.max_clique import MaxClique
+from bachelorthesis.transformations.problems.max_cut import MaxCut
 
 example_graph = Graph(
     [
@@ -33,7 +34,7 @@ example_graph = Graph(
 class TestGraphOptimization:
     @example({"graph": example_graph, "steps": 3, "start_node": 0, "terminal_node": 1})
     @given(longest_path_params())
-    @settings(deadline=1000)
+    @settings(deadline=None)
     def test_longest_path(self, params):
         """Test if GraphOptimization encodes the Longest Path problem properly"""
         set_printoptions(linewidth=1000)
@@ -80,7 +81,7 @@ class TestGraphOptimization:
 
     @example({"graph": example_graph, "colors": 2})
     @given(graph_coloring_params())
-    @settings(deadline=1000)
+    @settings(deadline=None)
     def test_graph_coloring(self, params):
         """Test GraphOptimization for Graph Coloring"""
         set_printoptions(linewidth=1000)
@@ -114,7 +115,7 @@ class TestGraphOptimization:
 
     @example({"graph": example_graph})
     @given(traveling_salesperson_params())
-    @settings(deadline=1000)
+    @settings(deadline=None)
     def test_traveling_salesperson(self, params):
         """Test GraphOptimization for Traveling Salesperson"""
         set_printoptions(linewidth=1000)
@@ -159,7 +160,7 @@ class TestGraphOptimization:
 
     @example({"graph": example_graph})
     @given(traveling_salesperson_params())
-    @settings(deadline=1000)
+    @settings(deadline=None)
     def test_hamiltonian_cycle(self, params):
         """Test GraphOptimization for Hamiltonian Cycle"""
         set_printoptions(linewidth=1000)
@@ -200,7 +201,7 @@ class TestGraphOptimization:
     @given(
         graph=graph_builder(graph_type=Graph, min_nodes=4, max_nodes=40, min_edges=2)
     )
-    @settings(deadline=1000)
+    @settings(deadline=None)
     def test_max_clique(self, graph: Union[dict, Graph]):  # give returns dict :shrug:
         """Test GraphOptimization for Max Clique"""
         set_printoptions(linewidth=1000)
@@ -224,6 +225,43 @@ class TestGraphOptimization:
         }
 
         ours = g_opt.generate_qubo(**max_clique_constraints)
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True
+
+    @example({"graph": example_graph})
+    @given(
+        graph=graph_builder(graph_type=Graph, min_nodes=4, max_nodes=40, min_edges=2)
+    )
+    @settings(deadline=None)
+    def test_max_cut(self, graph: Union[dict, Graph]):  # give returns dict :shrug:
+        """Test GraphOptimization for Max Cut"""
+        set_printoptions(linewidth=1000)
+
+        try:
+            graph: Graph = Graph(graph.get("graph"))
+        except AttributeError:
+            graph: Graph = Graph(graph)
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = MaxCut(graph=graph).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        a: int = 1
+
+        max_cut_constraints = {
+            "nodes_with_edges": -a,
+            "edges": 2 * a
+        }
+
+        ours = g_opt.generate_qubo(**max_cut_constraints)
 
         note("real:")
         note(real)  # noqa
