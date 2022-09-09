@@ -20,6 +20,9 @@ from bachelorthesis.tests.problem_parameters import (
 )
 from bachelorthesis.transformations.problems.max_clique import MaxClique
 from bachelorthesis.transformations.problems.max_cut import MaxCut
+from bachelorthesis.transformations.problems.minimum_vertex_cover import (
+    MinimumVertexCover,
+)
 
 example_graph = Graph(
     [
@@ -259,6 +262,44 @@ class TestGraphOptimization:
         max_cut_constraints = {"nodes_with_edges": -a, "edges": 2 * a}
 
         ours = g_opt.generate_qubo(**max_cut_constraints)
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True
+
+    @example({"graph": example_graph})
+    @given(
+        graph=graph_builder(graph_type=Graph, min_nodes=4, max_nodes=40, min_edges=2)
+    )
+    @settings(deadline=None)
+    def test_minimum_vertex_cover(self, graph: Union[dict, Graph]):
+        """Test GraphOptimization for Minimum Vertex Cover"""
+        set_printoptions(linewidth=1000)
+
+        try:
+            graph: Graph = Graph(graph.get("graph"))
+        except AttributeError:
+            graph: Graph = Graph(graph)
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = MinimumVertexCover(graph=graph).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        a: int = 1
+
+        min_vertex_cover_constraints = {
+            "diagonal": a,
+            "nodes_with_edges": -a,
+            "edges": a,
+        }
+
+        ours = g_opt.generate_qubo(**min_vertex_cover_constraints)
 
         note("real:")
         note(real)  # noqa
