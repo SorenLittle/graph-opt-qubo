@@ -3,7 +3,7 @@ from typing import Union
 
 from hypothesis import example, given, settings, note
 from hypothesis_networkx import graph_builder
-from networkx import Graph, to_dict_of_dicts
+from networkx import Graph
 from numpy import allclose, set_printoptions
 
 from bachelorthesis.graph_optimization import GraphOptimization
