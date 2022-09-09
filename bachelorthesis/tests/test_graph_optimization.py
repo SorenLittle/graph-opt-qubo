@@ -256,10 +256,7 @@ class TestGraphOptimization:
 
         a: int = 1
 
-        max_cut_constraints = {
-            "nodes_with_edges": -a,
-            "edges": 2 * a
-        }
+        max_cut_constraints = {"nodes_with_edges": -a, "edges": 2 * a}
 
         ours = g_opt.generate_qubo(**max_cut_constraints)
 
