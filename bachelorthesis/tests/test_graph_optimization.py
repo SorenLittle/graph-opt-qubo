@@ -1,20 +1,24 @@
 """Tests that GraphOptimization generates correct qubos"""
+from typing import Union
+
 from hypothesis import example, given, settings, note
 from hypothesis_networkx import graph_builder
-from networkx import Graph
+from networkx import Graph, to_dict_of_dicts
 from numpy import allclose, set_printoptions
 
 from bachelorthesis.graph_optimization import GraphOptimization
 from bachelorthesis.transformations import (
     LongestPath,
     GraphColoring,
-    TravelingSalesperson, HamiltonianCycle,
+    TravelingSalesperson,
+    HamiltonianCycle,
 )
 from bachelorthesis.tests.problem_parameters import (
     longest_path_params,
     graph_coloring_params,
     traveling_salesperson_params,
 )
+from bachelorthesis.transformations.problems.max_clique import MaxClique
 
 example_graph = Graph(
     [
@@ -108,26 +112,6 @@ class TestGraphOptimization:
 
         assert allclose(real, ours) == True
 
-    # @example({"graph": example_graph})
-    # @given(graph_builder(graph_type=Graph, min_nodes=0, max_nodes=16))
-    # @settings(deadline=1000)
-    # def test_hamiltonian_cycle(self, params):
-    #     """Test GraphOptimization for Hamiltonian Cycle"""
-    #     set_printoptions(linewidth=1000)
-    #
-    #     graph: Graph = params["graph"]
-    #     note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
-    #
-    #     real = HamiltonianCycle(**params).gen_qubo()
-    #
-    #     g_opt = GraphOptimization(graph=graph)
-    #
-    #     # TODO: scale
-    #
-    #     hamiltonian_cycle_constraints = {
-    #
-    #     }
-
     @example({"graph": example_graph})
     @given(traveling_salesperson_params())
     @settings(deadline=1000)
@@ -180,7 +164,7 @@ class TestGraphOptimization:
         """Test GraphOptimization for Hamiltonian Cycle"""
         set_printoptions(linewidth=1000)
 
-        graph: Graph = params['graph']
+        graph: Graph = params["graph"]
         note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
 
         real = HamiltonianCycle(**params).gen_qubo()
@@ -212,3 +196,41 @@ class TestGraphOptimization:
 
         assert allclose(real, ours) == True
 
+    @example({"graph": example_graph})
+    @given(
+        graph=graph_builder(graph_type=Graph, min_nodes=4, max_nodes=40, min_edges=2)
+    )
+    @settings(deadline=1000)
+    def test_max_clique(self, graph: Union[dict, Graph]):  # give returns dict :shrug:
+        """Test GraphOptimization for Max Clique"""
+        set_printoptions(linewidth=1000)
+
+        try:
+            graph: Graph = Graph(graph.get("graph"))
+        except AttributeError:
+            graph: Graph = Graph(graph)
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = MaxClique(graph=graph).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        a: int = 1
+        b: int = 2
+
+        max_clique_constraints = {
+            "diagonal": -a,
+            "edges": 0,
+            "non_edges": b,
+        }
+
+        ours = g_opt.generate_qubo(**max_clique_constraints)
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True

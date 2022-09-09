@@ -63,9 +63,9 @@ class GraphOptimization:
     def _add_structure_constraints(
         self,
         qubo: NDArray,
-        positions: int,
-        start_node: int,
-        terminal_node: int,
+        positions: int = 1,
+        start_node: int = None,
+        terminal_node: int = None,
         start_node_score: float = None,
         terminal_node_score: float = None,
         diagonal: float = None,
@@ -75,8 +75,6 @@ class GraphOptimization:
         **kwargs,
     ):
         """Handles constraints related to graph structure (not edges)"""
-
-        print(start_node, start_node_score)
 
         # START NODE
         if (start_node is not None) and start_node_score:
@@ -127,7 +125,7 @@ class GraphOptimization:
     def _add_edge_constraints(
         self,
         qubo: NDArray,
-        positions: int,
+        positions: int = 1,
         double_count_edges: bool = False,
         double_count_edges_cycles: bool = False,
         edges: float = None,  # TODO: edge_cycles, edge_self, edge_w_self_factor?
@@ -142,7 +140,6 @@ class GraphOptimization:
 
         for node in self.nodes:
             connected_nodes: List[int] = [n for _, n in self.graph.edges(node)]
-            print(node, connected_nodes)
 
             for position in range(positions):
                 # CALCULATE INDEX
@@ -226,6 +223,11 @@ class GraphOptimization:
                             elif node2 <= node and double_count_edges:
                                 qubo[idx2][idx] += non_edges
 
+                        elif positions == 1:
+                            if node < node2:
+                                idx2: int = node2
+                                qubo[idx][idx2] += non_edges
+
                         # NON EDGES CYCLE
 
                         elif (
@@ -239,8 +241,6 @@ class GraphOptimization:
                                 qubo[idx][idx2] += non_edges_cycles
                             if node2 <= node and double_count_edges:
                                 qubo[idx2][idx] += non_edges_cycles
-
-                            # TODO: are there any non positional, non-edge problems
 
                 # NON EDGES SELF
                 if non_edges_self:

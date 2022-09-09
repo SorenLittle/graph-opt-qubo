@@ -1,4 +1,5 @@
-"""QUBO Transformation of Traveling Salesperson problem"""
+"""QUBO Transformation of Hamiltonian Cycle problem"""
+
 import itertools
 from typing import Union, List
 

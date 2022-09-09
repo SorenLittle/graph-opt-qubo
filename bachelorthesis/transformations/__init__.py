@@ -5,3 +5,4 @@ from .problems.traveling_salesperson import TravelingSalesperson
 from .problems.maximum_flow import MaximumFlow
 from .problems.minimal_spanning_tree import MinimalSpanningTreeDegreeConstraint
 from .problems.hamiltonian_cycle import HamiltonianCycle
+from .problems.max_clique import MaxClique
