@@ -1,4 +1,4 @@
-"""QUBO Transformation of the Max Clique problem"""
+"""QUBO Transformation of the Max Cut problem"""
 import itertools
 from typing import Union, List
 
@@ -10,9 +10,9 @@ from numpy.typing import NDArray
 from bachelorthesis.transformations.problem import Problem
 
 
-class MaxClique(Problem):
+class MaxCut(Problem):
     def __init__(self, graph: Union[Graph, DiGraph]):
-        """The Max Clique Problem
+        """The Max Cut Problem
 
         Parameters
         ----------
@@ -32,12 +32,12 @@ class MaxClique(Problem):
         ]
 
         a = 1
-        b = 2 * 1
 
         hamiltonian = qv.QUBO()
 
-        hamiltonian += -a * sum((x[v] for v in range(self.n))) + b * sum(
-            x[u] * x[v] for u, v in non_edges(self.graph)
+        hamiltonian += -a * sum(  # nodes are in different sets
+            x[edge[0]] + x[edge[1]] - 2 * x[edge[0]] * x[edge[1]]
+            for edge in self.graph.edges
         )
 
         hamiltonian.set_mapping({var_names[i]: i for i in range(len(var_names))})

@@ -13,7 +13,7 @@ from bachelorthesis.transformations.problem import Problem
 
 class HamiltonianCycle(Problem):
     def __init__(self, graph: Union[Graph, DiGraph]):
-        """The Traveling Salesperson Problem
+        """The Hamiltonian Cycle Problem
 
         Parameters
         ----------
