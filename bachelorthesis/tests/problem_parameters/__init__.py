@@ -5,3 +5,6 @@ from bachelorthesis.tests.problem_parameters.longest_path_params import (
 from bachelorthesis.tests.problem_parameters.graph_coloring_params import (
     graph_coloring_params,
 )
+from bachelorthesis.tests.problem_parameters.traveling_salesperson_params import (
+    traveling_salesperson_params,
+)

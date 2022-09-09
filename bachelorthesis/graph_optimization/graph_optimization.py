@@ -128,6 +128,8 @@ class GraphOptimization:
         self,
         qubo: NDArray,
         positions: int,
+        double_count_edges: bool = False,
+        double_count_edges_cycles: bool = False,
         edges: float = None,  # TODO: edge_cycles, edge_self, edge_w_self_factor?
         edge_weights_factor: float = None,
         edge_weights_cycles_factor: float = None,
@@ -139,7 +141,8 @@ class GraphOptimization:
         """Handles constraints related to the edges in the graph"""
 
         for node in self.nodes:
-            connected_nodes: List[int] = [node2 for _, node2 in self.graph.edges(node)]
+            connected_nodes: List[int] = [n for _, n in self.graph.edges(node)]
+            print(node, connected_nodes)
 
             for position in range(positions):
                 # CALCULATE INDEX
@@ -153,66 +156,92 @@ class GraphOptimization:
                 # EDGES
                 if edges:
                     for node2 in connected_nodes:
-                        if node2 >= node:  # make sure not to double count
-                            idx2: int = node2 * positions + position
+                        idx2: int = node2 * positions + position
+                        if node <= node2:
                             qubo[idx][idx2] += edges
+                        elif node2 <= node and double_count_edges:
+                            qubo[idx2][idx] += edges
+
 
                 # EDGE WEIGHTS + CYCLES
                 if edge_weights_factor:
                     for node2 in connected_nodes:
                         # TODO: node2 >= test is "only" for undirected -> do directed graphs break
-                        if node2 >= node and position < positions - 1:
+                        if position < positions - 1:  # node2 >= node and
                             idx2: int = node2 * positions + position + 1
+                            print("ew", idx, idx2)
 
                             edge_data = self.graph.get_edge_data(node, node2)
                             if weight := edge_data.get("weight"):
-                                qubo[idx][idx2] += weight * edge_weights_factor
+                                if node < node2:
+                                    qubo[idx][idx2] += weight * edge_weights_factor
+                                if node2 <= node and double_count_edges:
+                                    qubo[idx2][idx] += weight * edge_weights_factor
 
                         # EDGE WEIGHTS CYCLES
                         elif (
-                            node2 >= node
+                            (not (node2 <= node) or double_count_edges)  # DOUBLE COUNT
                             and position == positions - 1
                             and edge_weights_cycles_factor
                         ):
                             idx2: int = node2 * positions
+                            print("ec", idx, idx2)
 
                             edge_data = self.graph.get_edge_data(node, node2)
                             if weight := edge_data.get("weight"):
-                                qubo[idx][idx2] += weight * edge_weights_cycles_factor
+                                if node < node2:
+                                    qubo[idx][idx2] += weight * edge_weights_cycles_factor
+                                if double_count_edges and node2 <= node:
+                                    qubo[idx2][idx] += weight * edge_weights_cycles_factor
 
-                # NON EDGES
+                # NON EDGES + CYCLES
 
                 if non_edges:
                     # grab all nodes to which there is no edge
-                    if self.is_directed:
-                        unconnected_nodes = [
-                            n
-                            for n in self.nodes
-                            if n not in connected_nodes and n != node
-                        ]
-                    else:
-                        unconnected_nodes = [
-                            n
-                            for n in range(node + 1, len(self.nodes))
-                            if n not in connected_nodes
-                        ]
+                    # if self.is_directed:
+                    #     unconnected_nodes = [
+                    #         n
+                    #         for n in self.nodes
+                    #         if n not in connected_nodes and n != node
+                    #     ]
+                    # else:
+                    #     # unconnected_nodes = [
+                    #     #     n
+                    #     #     for n in range(node + 1, len(self.nodes))
+                    #     #     if n not in connected_nodes
+                    #     # ]
+                    unconnected_nodes = [
+                        n
+                        for n in self.nodes
+                        if n not in connected_nodes and n != node
+                    ]
 
                     for node2 in unconnected_nodes:
                         if positions > 1 and position < positions - 1:
-                            # don't add if last position -> cycle
                             idx2: int = node2 * positions + position + 1
-                            qubo[idx][idx2] += non_edges
+                            print("nw", idx, idx2)
+                            if node < node2:
+                                qubo[idx][idx2] += non_edges
+                            elif node2 <= node and double_count_edges:
+                                qubo[idx2][idx] += non_edges
 
                         # NON EDGES CYCLE
 
-                        elif position == positions - 1 and non_edges_cycles:
+                        elif (
+                            (not (node2 <= node) or double_count_edges_cycles)  # DOUBLE COUNT
+                            and position == positions - 1
+                            and edge_weights_cycles_factor
+                        ):
                             idx2: int = node2 * positions
-                            qubo[idx][idx2] += non_edges_cycles
+                            print("nc", idx, idx2)
+                            if node < node2:
+                                qubo[idx][idx2] += non_edges_cycles
+                            if node2 <= node and double_count_edges:
+                                qubo[idx2][idx] += non_edges_cycles
 
                             # TODO: are there any non positional, non-edge problems
 
                 # NON EDGES SELF
-
                 if non_edges_self:
                     if position < positions - 1:
                         idx2: int = idx + 1

@@ -1,15 +1,20 @@
 """Tests that GraphOptimization generates correct qubos"""
 from hypothesis import example, given, settings, note
+from hypothesis_networkx import graph_builder
 from networkx import Graph
 from numpy import allclose, set_printoptions
 
 from bachelorthesis.graph_optimization import GraphOptimization
-from bachelorthesis.transformations import LongestPath
+from bachelorthesis.transformations import (
+    LongestPath,
+    GraphColoring,
+    TravelingSalesperson,
+)
 from bachelorthesis.tests.problem_parameters import (
     longest_path_params,
     graph_coloring_params,
+    traveling_salesperson_params,
 )
-from bachelorthesis.transformations.problems.graph_coloring import GraphColoring
 
 example_graph = Graph(
     [
@@ -82,6 +87,7 @@ class TestGraphOptimization:
         real = GraphColoring(**params).gen_qubo()
 
         g_opt = GraphOptimization(graph=graph)
+
         a = 4
 
         graph_coloring_constraints = {
@@ -91,6 +97,71 @@ class TestGraphOptimization:
         }
         ours = g_opt.generate_qubo(
             positions=params["colors"], **graph_coloring_constraints
+        )
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True
+
+    # @example({"graph": example_graph})
+    # @given(graph_builder(graph_type=Graph, min_nodes=0, max_nodes=16))
+    # @settings(deadline=1000)
+    # def test_hamiltonian_cycle(self, params):
+    #     """Test GraphOptimization for Hamiltonian Cycle"""
+    #     set_printoptions(linewidth=1000)
+    #
+    #     graph: Graph = params["graph"]
+    #     note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+    #
+    #     real = HamiltonianCycle(**params).gen_qubo()
+    #
+    #     g_opt = GraphOptimization(graph=graph)
+    #
+    #     # TODO: scale
+    #
+    #     hamiltonian_cycle_constraints = {
+    #
+    #     }
+
+    @example({"graph": example_graph})
+    @given(traveling_salesperson_params())
+    @settings(deadline=1000)
+    def test_traveling_salesperson(self, params):
+        """Test GraphOptimization for Traveling Salesperson"""
+        set_printoptions(linewidth=1000)
+
+        graph: Graph = params["graph"]
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = TravelingSalesperson(**params).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        b: int = 1
+        edge_weights = [
+            graph.get_edge_data(edge[0], edge[1]).get("weight") for edge in graph.edges
+        ]
+        a: int = b * max(edge_weights, default=0) + 1
+
+        traveling_salesperson_constraints = {
+            "double_count_edges": True,
+            "double_count_edges_cycles": True,
+            "diagonal": -2 * a,
+            "one_node_many_positions": 2 * a,
+            "one_position_many_nodes": 2 * a,
+            "non_edges": a,
+            "non_edges_cycles": a,
+            "edge_weights_factor": b,
+            "edge_weights_cycles_factor": b,
+        }
+
+        ours = g_opt.generate_qubo(
+            positions=graph.order(), **traveling_salesperson_constraints
         )
 
         note("real:")
