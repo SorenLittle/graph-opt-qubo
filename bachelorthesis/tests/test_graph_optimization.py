@@ -311,35 +311,35 @@ class TestGraphOptimization:
 
         assert allclose(real, ours) == True
 
-    @example({"graph": example_graph})
-    @given(maximum_flow_params())
-    @settings(deadline=None)
-    def test_maximum_flow(self, params):
-        """Test GraphOptimization for Maximum Flow"""
-        set_printoptions(linewidth=1000)
-
-        graph: Graph = params["graph"]
-        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
-
-        real = MaximumFlow(**params).gen_qubo()
-
-        g_opt = GraphOptimization(graph=graph)
-
-        a: int = 1
-
-        hamiltonian_cycle_constraints = {
-
-        }
-
-        ours = g_opt.generate_qubo(
-            positions=graph.order(), **hamiltonian_cycle_constraints
-        )
-
-        note("real:")
-        note(real)  # noqa
-        note("ours:")
-        note(ours)  # noqa
-        note("difference:")
-        note(real - ours)
-
-        assert allclose(real, ours) == True
+    # @example({"graph": example_graph})
+    # @given(maximum_flow_params())
+    # @settings(deadline=None)
+    # def test_maximum_flow(self, params):
+    #     """Test GraphOptimization for Maximum Flow"""
+    #     set_printoptions(linewidth=1000)
+    #
+    #     graph: Graph = params["graph"]
+    #     note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+    #
+    #     real = MaximumFlow(**params).gen_qubo()
+    #
+    #     g_opt = GraphOptimization(graph=graph)
+    #
+    #     a: int = 1
+    #
+    #     hamiltonian_cycle_constraints = {
+    #
+    #     }
+    #
+    #     ours = g_opt.generate_qubo(
+    #         positions=graph.order(), **hamiltonian_cycle_constraints
+    #     )
+    #
+    #     note("real:")
+    #     note(real)  # noqa
+    #     note("ours:")
+    #     note(ours)  # noqa
+    #     note("difference:")
+    #     note(real - ours)
+    #
+    #     assert allclose(real, ours) == True
