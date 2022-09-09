@@ -54,11 +54,12 @@ class MinimalSpanningTreeDegreeConstraint(Problem):
             for v in graph.nodes
         }
         x_vars2 = {
-            e: [qv.QUBO.create_var(x_name2[e][i]) for i in range(n_half)] for e in
-            graph.edges
+            e: [qv.QUBO.create_var(x_name2[e][i]) for i in range(n_half)]
+            for e in graph.edges
         }
-        z_vars = {v: [qv.QUBO.create_var(z_name[v][i]) for i in range(M)] for v in
-                  graph.nodes}
+        z_vars = {
+            v: [qv.QUBO.create_var(z_name[v][i]) for i in range(M)] for v in graph.nodes
+        }
 
         hamiltonian = qv.QUBO()
 
@@ -67,12 +68,15 @@ class MinimalSpanningTreeDegreeConstraint(Problem):
 
         # Second Term
         hamiltonian += sum(
-            (1 - sum(x_vars[v][i] for i in range(n_half + 1))) ** 2 for v in graph.nodes)
+            (1 - sum(x_vars[v][i] for i in range(n_half + 1))) ** 2 for v in graph.nodes
+        )
 
         # Third Term
         hamiltonian += sum(
-            (y_vars[u, v] - sum(
-                x_vars2[u, v][i] + x_vars2[v, u][i] for i in range(n_half)))
+            (
+                y_vars[u, v]
+                - sum(x_vars2[u, v][i] + x_vars2[v, u][i] for i in range(n_half))
+            )
             ** 2
             for u, v in graph.edges
         )
@@ -88,12 +92,12 @@ class MinimalSpanningTreeDegreeConstraint(Problem):
         count_val = [2 ** i for i in range(M - 1)] + [max_degree + 1 - 2 ** (M - 1)]
         hamiltonian += sum(
             (
-                    sum(z_vars[v][i] * count_val[i] for i in range(M))
-                    - sum(
-                x_vars2[u, w][i] + x_vars2[w, u][i]
-                for i in range(n_half)
-                for u, w in graph.edges(v)
-            )
+                sum(z_vars[v][i] * count_val[i] for i in range(M))
+                - sum(
+                    x_vars2[u, w][i] + x_vars2[w, u][i]
+                    for i in range(n_half)
+                    for u, w in graph.edges(v)
+                )
             )
             ** 2
             for v in graph.nodes

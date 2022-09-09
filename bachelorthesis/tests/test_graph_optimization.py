@@ -23,8 +23,9 @@ from bachelorthesis.tests.problem_parameters import (
     traveling_salesperson_params,
     maximum_flow_params,
 )
-from bachelorthesis.transformations.problems.maximum_independent_set import \
-    MaximumIndependentSet
+from bachelorthesis.transformations.problems.maximum_independent_set import (
+    MaximumIndependentSet,
+)
 
 example_graph = Graph(
     [
@@ -240,13 +241,14 @@ class TestGraphOptimization:
 
         assert allclose(real, ours) == True
 
-
     @example({"graph": example_graph})
     @given(
         graph=graph_builder(graph_type=Graph, min_nodes=4, max_nodes=40, min_edges=2)
     )
     @settings(deadline=None)
-    def test_maximum_independent_set(self, graph: Union[dict, Graph]):  # give returns dict :shrug:
+    def test_maximum_independent_set(
+        self, graph: Union[dict, Graph]
+    ):  # give returns dict :shrug:
         """Test GraphOptimization for Maximum Independent Set"""
         set_printoptions(linewidth=1000)
 
