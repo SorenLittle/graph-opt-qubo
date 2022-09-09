@@ -220,7 +220,6 @@ class TestGraphOptimization:
 
         max_clique_constraints = {
             "diagonal": -a,
-            "edges": 0,
             "non_edges": b,
         }
 
