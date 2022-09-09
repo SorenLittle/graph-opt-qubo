@@ -8,3 +8,6 @@ from bachelorthesis.tests.problem_parameters.graph_coloring_params import (
 from bachelorthesis.tests.problem_parameters.traveling_salesperson_params import (
     traveling_salesperson_params,
 )
+from bachelorthesis.tests.problem_parameters.maximum_flow_params import (
+    maximum_flow_params,
+)
