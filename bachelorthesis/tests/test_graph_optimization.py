@@ -23,7 +23,8 @@ from bachelorthesis.tests.problem_parameters import (
     traveling_salesperson_params,
     maximum_flow_params,
 )
-
+from bachelorthesis.transformations.problems.maximum_independent_set import \
+    MaximumIndependentSet
 
 example_graph = Graph(
     [
@@ -229,6 +230,45 @@ class TestGraphOptimization:
         }
 
         ours = g_opt.generate_qubo(**max_clique_constraints)
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True
+
+
+    @example({"graph": example_graph})
+    @given(
+        graph=graph_builder(graph_type=Graph, min_nodes=4, max_nodes=40, min_edges=2)
+    )
+    @settings(deadline=None)
+    def test_maximum_independent_set(self, graph: Union[dict, Graph]):  # give returns dict :shrug:
+        """Test GraphOptimization for Maximum Independent Set"""
+        set_printoptions(linewidth=1000)
+
+        try:
+            graph: Graph = Graph(graph.get("graph"))
+        except AttributeError:
+            graph: Graph = Graph(graph)
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = MaximumIndependentSet(graph=graph).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        a: int = 1
+        b: int = 2
+
+        maximum_independent_set_constraints = {
+            "diagonal": -a,
+            "edges": b,
+        }
+
+        ours = g_opt.generate_qubo(**maximum_independent_set_constraints)
 
         note("real:")
         note(real)  # noqa

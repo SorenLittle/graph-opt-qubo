@@ -8,3 +8,4 @@ from .problems.hamiltonian_cycle import HamiltonianCycle
 from .problems.max_clique import MaxClique
 from .problems.max_cut import MaxCut
 from .problems.minimum_vertex_cover import MinimumVertexCover
+from .problems.maximum_independent_set import MaximumIndependentSet
