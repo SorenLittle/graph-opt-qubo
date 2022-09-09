@@ -162,7 +162,6 @@ class GraphOptimization:
                         elif node2 <= node and double_count_edges:
                             qubo[idx2][idx] += edges
 
-
                 # EDGE WEIGHTS + CYCLES
                 if edge_weights_factor:
                     for node2 in connected_nodes:
@@ -190,9 +189,13 @@ class GraphOptimization:
                             edge_data = self.graph.get_edge_data(node, node2)
                             if weight := edge_data.get("weight"):
                                 if node < node2:
-                                    qubo[idx][idx2] += weight * edge_weights_cycles_factor
+                                    qubo[idx][idx2] += (
+                                        weight * edge_weights_cycles_factor
+                                    )
                                 if double_count_edges and node2 <= node:
-                                    qubo[idx2][idx] += weight * edge_weights_cycles_factor
+                                    qubo[idx2][idx] += (
+                                        weight * edge_weights_cycles_factor
+                                    )
 
                 # NON EDGES + CYCLES
 
@@ -211,9 +214,7 @@ class GraphOptimization:
                     #     #     if n not in connected_nodes
                     #     # ]
                     unconnected_nodes = [
-                        n
-                        for n in self.nodes
-                        if n not in connected_nodes and n != node
+                        n for n in self.nodes if n not in connected_nodes and n != node
                     ]
 
                     for node2 in unconnected_nodes:
@@ -228,7 +229,9 @@ class GraphOptimization:
                         # NON EDGES CYCLE
 
                         elif (
-                            (not (node2 <= node) or double_count_edges_cycles)  # DOUBLE COUNT
+                            (
+                                not (node2 <= node) or double_count_edges_cycles
+                            )  # DOUBLE COUNT
                             and position == positions - 1
                             and edge_weights_cycles_factor
                         ):
