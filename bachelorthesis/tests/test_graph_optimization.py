@@ -12,24 +12,25 @@ from bachelorthesis.transformations import (
     GraphColoring,
     TravelingSalesperson,
     HamiltonianCycle,
+    MaxCut,
+    MaxClique,
+    MaximumFlow,
+    MinimumVertexCover,
 )
 from bachelorthesis.tests.problem_parameters import (
     longest_path_params,
     graph_coloring_params,
     traveling_salesperson_params,
+    maximum_flow_params,
 )
-from bachelorthesis.transformations.problems.max_clique import MaxClique
-from bachelorthesis.transformations.problems.max_cut import MaxCut
-from bachelorthesis.transformations.problems.minimum_vertex_cover import (
-    MinimumVertexCover,
-)
+
 
 example_graph = Graph(
     [
-        (0, 1, {"weight": 8}),
-        (0, 2, {"weight": 7}),
-        (1, 3, {"weight": 2}),
-        (2, 3, {"weight": 8}),
+        (0, 1, {"weight": 3}),
+        (0, 2, {"weight": 3}),
+        (1, 3, {"weight": 3}),
+        (2, 3, {"weight": 3}),
     ]
 )
 
@@ -300,6 +301,39 @@ class TestGraphOptimization:
         }
 
         ours = g_opt.generate_qubo(**min_vertex_cover_constraints)
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True
+
+    @example({"graph": example_graph})
+    @given(maximum_flow_params())
+    @settings(deadline=None)
+    def test_maximum_flow(self, params):
+        """Test GraphOptimization for Maximum Flow"""
+        set_printoptions(linewidth=1000)
+
+        graph: Graph = params["graph"]
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = MaximumFlow(**params).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        a: int = 1
+
+        hamiltonian_cycle_constraints = {
+
+        }
+
+        ours = g_opt.generate_qubo(
+            positions=graph.order(), **hamiltonian_cycle_constraints
+        )
 
         note("real:")
         note(real)  # noqa
