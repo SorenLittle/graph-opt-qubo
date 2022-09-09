@@ -25,6 +25,8 @@ class TravelingSalesperson(Problem):
     def gen_qubo(self) -> NDArray:
         if not self.graph.is_directed():
             graph: DiGraph = self.graph.to_directed()
+        else:
+            graph: DiGraph = self.graph
 
         # create list of variable names in order to ensure correct mapping
         var_names: List[str] = [
