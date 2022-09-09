@@ -229,11 +229,9 @@ class GraphOptimization:
                         # NON EDGES CYCLE
 
                         elif (
-                            (
-                                not (node2 <= node) or double_count_edges_cycles
-                            )  # DOUBLE COUNT
+                            (not (node2 <= node) or double_count_edges_cycles)
                             and position == positions - 1
-                            and edge_weights_cycles_factor
+                            and non_edges_cycles
                         ):
                             idx2: int = node2 * positions
                             print("nc", idx, idx2)

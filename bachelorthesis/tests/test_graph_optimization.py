@@ -8,7 +8,7 @@ from bachelorthesis.graph_optimization import GraphOptimization
 from bachelorthesis.transformations import (
     LongestPath,
     GraphColoring,
-    TravelingSalesperson,
+    TravelingSalesperson, HamiltonianCycle,
 )
 from bachelorthesis.tests.problem_parameters import (
     longest_path_params,
@@ -172,3 +172,43 @@ class TestGraphOptimization:
         note(real - ours)
 
         assert allclose(real, ours) == True
+
+    @example({"graph": example_graph})
+    @given(traveling_salesperson_params())
+    @settings(deadline=1000)
+    def test_hamiltonian_cycle(self, params):
+        """Test GraphOptimization for Hamiltonian Cycle"""
+        set_printoptions(linewidth=1000)
+
+        graph: Graph = params['graph']
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        real = HamiltonianCycle(**params).gen_qubo()
+
+        g_opt = GraphOptimization(graph=graph)
+
+        a: int = 1
+
+        hamiltonian_cycle_constraints = {
+            "double_count_edges": True,
+            "double_count_edges_cycles": True,
+            "diagonal": -2 * a,
+            "one_node_many_positions": 2 * a,
+            "one_position_many_nodes": 2 * a,
+            "non_edges": a,
+            "non_edges_cycles": a,
+        }
+
+        ours = g_opt.generate_qubo(
+            positions=graph.order(), **hamiltonian_cycle_constraints
+        )
+
+        note("real:")
+        note(real)  # noqa
+        note("ours:")
+        note(ours)  # noqa
+        note("difference:")
+        note(real - ours)
+
+        assert allclose(real, ours) == True
+
