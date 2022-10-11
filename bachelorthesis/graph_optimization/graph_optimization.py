@@ -156,16 +156,15 @@ class GraphOptimization:
                         idx2: int = node2 * positions + position
                         if node <= node2:
                             qubo[idx][idx2] += edges
-                        elif node2 <= node and double_count_edges:
+                        elif node2 < node and double_count_edges:
                             qubo[idx2][idx] += edges
 
                 # EDGE WEIGHTS + CYCLES
                 if edge_weights_factor:
                     for node2 in connected_nodes:
                         # TODO: node2 >= test is "only" for undirected -> do directed graphs break
-                        if position < positions - 1:  # node2 >= node and
+                        if position < positions - 1:
                             idx2: int = node2 * positions + position + 1
-                            print("ew", idx, idx2)
 
                             edge_data = self.graph.get_edge_data(node, node2)
                             if weight := edge_data.get("weight"):
@@ -181,7 +180,6 @@ class GraphOptimization:
                             and edge_weights_cycles_factor
                         ):
                             idx2: int = node2 * positions
-                            print("ec", idx, idx2)
 
                             edge_data = self.graph.get_edge_data(node, node2)
                             if weight := edge_data.get("weight"):
@@ -195,21 +193,7 @@ class GraphOptimization:
                                     )
 
                 # NON EDGES + CYCLES
-
                 if non_edges:
-                    # grab all nodes to which there is no edge
-                    # if self.is_directed:
-                    #     unconnected_nodes = [
-                    #         n
-                    #         for n in self.nodes
-                    #         if n not in connected_nodes and n != node
-                    #     ]
-                    # else:
-                    #     # unconnected_nodes = [
-                    #     #     n
-                    #     #     for n in range(node + 1, len(self.nodes))
-                    #     #     if n not in connected_nodes
-                    #     # ]
                     unconnected_nodes = [
                         n for n in self.nodes if n not in connected_nodes and n != node
                     ]
@@ -217,12 +201,12 @@ class GraphOptimization:
                     for node2 in unconnected_nodes:
                         if positions > 1 and position < positions - 1:
                             idx2: int = node2 * positions + position + 1
-                            print("nw", idx, idx2)
                             if node < node2:
                                 qubo[idx][idx2] += non_edges
                             elif node2 <= node and double_count_edges:
                                 qubo[idx2][idx] += non_edges
 
+                        # TODO: necessary?
                         elif positions == 1:
                             if node < node2:
                                 idx2: int = node2
@@ -232,14 +216,14 @@ class GraphOptimization:
 
                         elif (
                             (not (node2 <= node) or double_count_edges_cycles)
+                            and positions > 1
                             and position == positions - 1
                             and non_edges_cycles
                         ):
                             idx2: int = node2 * positions
-                            print("nc", idx, idx2)
                             if node < node2:
                                 qubo[idx][idx2] += non_edges_cycles
-                            if node2 <= node and double_count_edges:
+                            if node2 <= node and double_count_edges_cycles:
                                 qubo[idx2][idx] += non_edges_cycles
 
                 # NON EDGES SELF
