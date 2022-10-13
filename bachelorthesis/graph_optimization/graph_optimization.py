@@ -87,7 +87,21 @@ class GraphOptimization:
             qubo[terminal_idx][terminal_idx] += terminal_node_score
 
         # ITERATIVE CONSTRAINTS
-        for node in self.nodes:
+        nodes = list(self.nodes)
+        for node_idx in range(len(nodes)):
+
+            connected_nodes_lt: List = [
+                nodes.index(node)
+                for origin, node in self.graph.edges()
+                if nodes.index(origin) == node_idx  # TODO: this would be the place for the boolean flag
+            ]
+            connected_nodes_gt: List = [
+                nodes.index(node)
+                for node, origin in self.graph.edges()
+                if nodes.index(origin) == node_idx
+            ]
+            connected_nodes = connected_nodes_lt + connected_nodes_gt
+
             for position in range(positions):
                 # CALCULATE INDEX
                 # simple    : With positions = 1, we iterate over the range loop once
@@ -95,7 +109,7 @@ class GraphOptimization:
                 # positional: The below formula calculates the correct index of a node
                 #             in the context of a positional optimization
 
-                idx: int = node * positions + position
+                idx: int = node_idx * positions + position
 
                 # DIAGONAL
                 if diagonal:
@@ -103,23 +117,23 @@ class GraphOptimization:
 
                 # NODES WITH EDGES
                 if nodes_with_edges:
-                    for _ in [n for _, n in self.graph.edges(node)]:
+                    for node2_idx in connected_nodes:
                         qubo[idx][idx] += nodes_with_edges
 
                 # ONE NODE MANY POSITIONS
                 if one_node_many_positions:
                     remaining_positions = range(position + 1, positions)
                     for position2 in remaining_positions:
-                        idx2: int = node * positions + position2
+                        idx2: int = node_idx * positions + position2
                         qubo[idx][idx2] += one_node_many_positions
 
                 # ONE POSITION MANY NODES
                 if one_position_many_nodes:
                     remaining_nodes = range(
-                        node + 1, len(self.nodes)
+                        node_idx + 1, len(nodes)
                     )  # TODO: why don't we look at nodes before this one?
-                    for node2 in remaining_nodes:
-                        idx2: int = node2 * positions + position
+                    for node2_idx in remaining_nodes:
+                        idx2: int = node2_idx * positions + position
                         qubo[idx][idx2] += one_position_many_nodes
 
     def _add_edge_constraints(
