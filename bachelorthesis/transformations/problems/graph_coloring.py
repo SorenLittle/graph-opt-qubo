@@ -16,9 +16,8 @@ class GraphColoring(Problem):
 
         Parameters
         ----------
-        k_colors
-            the number of number of colors with which the induced subgraph
-            should be k-colorable
+        colors
+            the number of number of colors with which the graph should be colored
 
         graph
             A networkx graph of the problem instance
