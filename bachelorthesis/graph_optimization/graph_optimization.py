@@ -14,7 +14,7 @@ class GraphOptimization:
         self.graph: Union[Graph, DiGraph] = graph
         self.is_directed: bool = is_directed(graph)
         self.n: int = graph.order()
-        self.nodes: List[int] = list(self.graph.nodes)
+        # self.nodes: List[int] = list(self.graph.nodes)
 
     def generate_qubo(
         self,
@@ -87,7 +87,7 @@ class GraphOptimization:
             qubo[terminal_idx][terminal_idx] += terminal_node_score
 
         # ITERATIVE CONSTRAINTS
-        nodes = list(self.nodes)
+        nodes = list(self.graph.nodes)
         for node_idx in range(len(nodes)):
 
             connected_nodes_lt: List = [
@@ -152,8 +152,20 @@ class GraphOptimization:
     ):
         """Handles constraints related to the edges in the graph"""
 
-        for node in self.nodes:
-            connected_nodes: List[int] = [n for _, n in self.graph.edges(node)]
+        nodes = list(self.graph.nodes)
+        for node_idx in range(len(nodes)):
+
+            connected_nodes_lt: List[int] = [
+                nodes.index(node)
+                for origin, node in self.graph.edges()
+                if nodes.index(origin) == node_idx
+            ]
+            connected_nodes_gt: List[int] = [
+                nodes.index(node)
+                for node, origin in self.graph.edges()
+                if nodes.index(origin) == node_idx
+            ]
+            connected_nodes = connected_nodes_lt + connected_nodes_gt
 
             for position in range(positions):
                 # CALCULATE INDEX
@@ -162,15 +174,15 @@ class GraphOptimization:
                 # positional: The below formula calculates the correct index of a node
                 #             in the context of a positional optimization
 
-                idx: int = node * positions + position
+                idx: int = node_idx * positions + position
 
                 # EDGES
                 if edges:
-                    for node2 in connected_nodes:
-                        idx2: int = node2 * positions + position
-                        if node <= node2:
+                    for node2_idx in connected_nodes:
+                        idx2: int = node2_idx * positions + position
+                        if node_idx <= node2_idx:
                             qubo[idx][idx2] += edges
-                        elif node2 < node and double_count_edges:
+                        elif node2_idx < node_idx and double_count_edges:
                             qubo[idx2][idx] += edges
 
                 # EDGE WEIGHTS + CYCLES
