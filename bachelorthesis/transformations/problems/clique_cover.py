@@ -3,7 +3,7 @@ import itertools
 from typing import Union, List
 
 import qubovert as qv
-from networkx import Graph, DiGraph, non_edges
+from networkx import Graph, DiGraph
 from numpy import zeros
 from numpy.typing import NDArray
 
@@ -47,7 +47,6 @@ class CliqueCover(Problem):
 
         hamiltonian = qv.QUBO()
 
-        print(3)
         hamiltonian += a * sum(
             (1 - sum(x[v][i] for i in range(self.n))) ** 2 for v in range(self.k)
         ) + b * sum(
@@ -60,11 +59,9 @@ class CliqueCover(Problem):
             for i in range(self.n)
         )
 
-        print(4)
         hamiltonian.set_mapping({var_names[i]: i for i in range(len(var_names))})
         hamiltonian.pop(())  # no idea why hamiltonian is adding a (): 16 k, v pair...
 
-        print(5)
         if not hamiltonian.Q:
             return zeros((self.n * self.n, self.n * self.n))
 
