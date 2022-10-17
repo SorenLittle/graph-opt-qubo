@@ -132,8 +132,9 @@ class GraphOptimization:
         edge_weights_factor: float = None,
         edge_weights_cycles_factor: float = None,
         non_edges: float = None,
-        non_edges_self: float = None,
-        non_edges_cycles: float = None,
+        invalid_traversal: float = None,
+        invalid_traversal_self: float = None,
+        invalid_traversal_cycles: float = None,
         **kwargs,
     ):
         """Handles constraints related to the edges in the graph"""
@@ -159,7 +160,7 @@ class GraphOptimization:
                         elif node2 < node and double_count_edges:
                             qubo[idx2][idx] += edges
 
-                # EDGE WEIGHTS + CYCLES
+                # EDGE WEIGHTS + CYCLES  # TODO: add "and" to introductory if
                 if edge_weights_factor:
                     for node2 in connected_nodes:
                         # TODO: node2 >= test is "only" for undirected -> do directed graphs break
@@ -192,42 +193,71 @@ class GraphOptimization:
                                         weight * edge_weights_cycles_factor
                                     )
 
-                # NON EDGES + CYCLES
+                # NON EDGES
                 if non_edges:
+                    unconnected_nodes = [
+                        n for n in self.nodes if n not in connected_nodes and n != node
+                    ]
+                    #
+                    for node2 in unconnected_nodes:
+                    #     if positions > 1 and position < positions - 1:
+                    #         idx2: int = node2 * positions + position + 1
+                    #         if node < node2:
+                    #             qubo[idx][idx2] += non_edges
+                    #         elif node2 <= node and double_count_edges:
+                    #             qubo[idx2][idx] += non_edges
+                        if node < node2:
+                            idx2: int = node2 * positions + position
+
+                            qubo[idx][idx2] += non_edges
+
+                        # # NON EDGES CYCLE
+                        #
+                        # elif (
+                        #     (not (node2 <= node) or double_count_edges_cycles)
+                        #     and positions > 1
+                        #     and position == positions - 1
+                        #     and non_edges_cycles
+                        # ):
+                        #     idx2: int = node2 * positions
+                        #     if node < node2:
+                        #         qubo[idx][idx2] += non_edges_cycles
+                        #     if node2 <= node and double_count_edges_cycles:
+                        #         qubo[idx2][idx] += non_edges_cycles
+
+                # INVALID TRAVERSAL + CYCLE
+
+                if invalid_traversal or invalid_traversal_cycles:
                     unconnected_nodes = [
                         n for n in self.nodes if n not in connected_nodes and n != node
                     ]
 
                     for node2 in unconnected_nodes:
-                        if positions > 1 and position < positions - 1:
+                        if (
+                            positions > 1
+                            and position < positions - 1
+                            and invalid_traversal
+                        ):
                             idx2: int = node2 * positions + position + 1
                             if node < node2:
-                                qubo[idx][idx2] += non_edges
+                                qubo[idx][idx2] += invalid_traversal
                             elif node2 <= node and double_count_edges:
-                                qubo[idx2][idx] += non_edges
-
-                        # TODO: necessary?
-                        elif positions == 1:
-                            if node < node2:
-                                idx2: int = node2
-                                qubo[idx][idx2] += non_edges
-
-                        # NON EDGES CYCLE
+                                qubo[idx2][idx] += invalid_traversal
 
                         elif (
                             (not (node2 <= node) or double_count_edges_cycles)
                             and positions > 1
                             and position == positions - 1
-                            and non_edges_cycles
+                            and invalid_traversal_cycles
                         ):
                             idx2: int = node2 * positions
                             if node < node2:
-                                qubo[idx][idx2] += non_edges_cycles
+                                qubo[idx][idx2] += invalid_traversal_cycles
                             if node2 <= node and double_count_edges_cycles:
-                                qubo[idx2][idx] += non_edges_cycles
+                                qubo[idx2][idx] += invalid_traversal_cycles
 
                 # NON EDGES SELF
-                if non_edges_self:
-                    if position < positions - 1:
+                if invalid_traversal_self:
+                    if position < positions - 1 and node not in connected_nodes:
                         idx2: int = idx + 1
-                        qubo[idx][idx2] += non_edges_self
+                        qubo[idx][idx2] += invalid_traversal_self

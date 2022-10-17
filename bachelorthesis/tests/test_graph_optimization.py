@@ -53,7 +53,7 @@ class TestGraphOptimization:
         clique_cover_constraints = {
             "diagonal": -1,
             "one_node_many_positions": 2,
-            "non_edges": 2
+            "non_edges": 2,
         }
 
         ours = g_opt.generate_qubo(
@@ -96,8 +96,8 @@ class TestGraphOptimization:
             "one_position_many_nodes": 2 * scaling_constant,
             "one_node_many_positions": scaling_constant,
             "edge_weights_factor": -1,
-            "non_edges": scaling_constant,
-            "non_edges_self": scaling_constant,
+            "invalid_traversal": scaling_constant,
+            "invalid_traversal_self": scaling_constant,
         }
 
         ours = g_opt.generate_qubo(
@@ -176,8 +176,8 @@ class TestGraphOptimization:
             "diagonal": -2 * a,
             "one_node_many_positions": 2 * a,
             "one_position_many_nodes": 2 * a,
-            "non_edges": a,
-            "non_edges_cycles": a,
+            "invalid_traversal": a,
+            "invalid_traversal_cycles": a,
             "edge_weights_factor": b,
             "edge_weights_cycles_factor": b,
         }
@@ -217,8 +217,8 @@ class TestGraphOptimization:
             "diagonal": -2 * a,
             "one_node_many_positions": 2 * a,
             "one_position_many_nodes": 2 * a,
-            "non_edges": a,
-            "non_edges_cycles": a,
+            "invalid_traversal": a,
+            "invalid_traversal_cycles": a,
         }
 
         ours = g_opt.generate_qubo(
