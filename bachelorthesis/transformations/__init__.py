@@ -1,5 +1,6 @@
 """Aggregates all problem transformations"""
 from .problems.clique_cover import CliqueCover
+from .problems.densest_k_subgraph import DensestKSubgraph
 from .problems.longest_path import LongestPath
 from .problems.graph_coloring import GraphColoring
 from .problems.traveling_salesperson import TravelingSalesperson

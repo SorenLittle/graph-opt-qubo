@@ -200,12 +200,12 @@ class GraphOptimization:
                     ]
                     #
                     for node2 in unconnected_nodes:
-                    #     if positions > 1 and position < positions - 1:
-                    #         idx2: int = node2 * positions + position + 1
-                    #         if node < node2:
-                    #             qubo[idx][idx2] += non_edges
-                    #         elif node2 <= node and double_count_edges:
-                    #             qubo[idx2][idx] += non_edges
+                        #     if positions > 1 and position < positions - 1:
+                        #         idx2: int = node2 * positions + position + 1
+                        #         if node < node2:
+                        #             qubo[idx][idx2] += non_edges
+                        #         elif node2 <= node and double_count_edges:
+                        #             qubo[idx2][idx] += non_edges
                         if node < node2:
                             idx2: int = node2 * positions + position
 

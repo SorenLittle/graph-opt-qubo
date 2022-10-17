@@ -7,8 +7,10 @@ from networkx import Graph
 from numpy import allclose, set_printoptions
 
 from bachelorthesis.graph_optimization import GraphOptimization
+from bachelorthesis.solvers.exact import solve
 from bachelorthesis.transformations import (
     CliqueCover,
+    DensestKSubgraph,
     LongestPath,
     GraphColoring,
     TravelingSalesperson,
@@ -37,6 +39,7 @@ example_graph = Graph(
 
 
 class TestGraphOptimization:
+
     @example({"graph": example_graph, "colors": 2})
     @given(graph_coloring_params())
     @settings(deadline=None)
@@ -68,6 +71,53 @@ class TestGraphOptimization:
         note(real - ours)
 
         assert allclose(real, ours) == True
+
+    @example(
+        {
+            "graph": Graph(
+                [
+                    (0, 6),
+                    (1, 5),
+                    (1, 6),
+                    (1, 7),
+                    (2, 6),
+                    (2, 7),
+                    (2, 8),
+                    (2, 9),
+                    (3, 7),
+                    (3, 8),
+                    (3, 9),
+                    (4, 8),
+                ]
+            ),
+            "k": 5,
+        }
+    )
+    @given(graph_coloring_params())
+    @settings(deadline=None)
+    def test_densest_k_subgraph(self, params):
+        """Test GraphOptimization for Densest k-Subgraph"""
+        set_printoptions(linewidth=1000)
+        graph: Graph = params["graph"]
+        note(f"graph: ({{{graph.nodes}}}, {{{{{graph.edges(data=True)}}})")
+
+        params = params
+        if params.get("colors"):
+            params["k"] = params.pop("colors")
+        real = DensestKSubgraph(**params).gen_qubo()
+        real_solution, real_energies = solve(real)
+
+        g_opt = GraphOptimization(graph=graph)
+
+        # NOTE: does not fit within our schema
+        # densest_k_subgraph_constraints = {}
+        # ours = g_opt.generate_qubo(**densest_k_subgraph_constraints)
+
+        note("real solution:")
+        note(real_solution)  # noqa
+
+        # dumb test because our system cannot model this problem
+        assert real_energies[0] < 0
 
     @example({"graph": example_graph, "steps": 3, "start_node": 0, "terminal_node": 1})
     @given(longest_path_params())
