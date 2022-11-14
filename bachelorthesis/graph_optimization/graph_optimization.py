@@ -12,7 +12,6 @@ class GraphOptimization:
 
     def __init__(self, graph: Union[Graph, DiGraph]):
         self.graph: Union[Graph, DiGraph] = graph
-        self.is_directed: bool = is_directed(graph)
         self.n: int = graph.order()
         self.nodes: List[int] = list(self.graph.nodes)
 
@@ -127,7 +126,7 @@ class GraphOptimization:
         qubo: NDArray,
         positions: int = 1,
         double_count_edges: bool = False,
-        double_count_edges_cycles: bool = False,
+        double_count_edges_cycles: bool = False,  # TODO: combine into one flag
         edges: float = None,  # TODO: edge_cycles, edge_self, edge_w_self_factor?
         edge_weights_factor: float = None,
         edge_weights_cycles_factor: float = None,
