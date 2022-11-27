@@ -3,6 +3,8 @@ networkx
 qubovert
 dimod
 dwave_qbsolv
+dwave-neal
+dwave-tabu
 pytest
 hypothesis
 hypothesis_networkx
