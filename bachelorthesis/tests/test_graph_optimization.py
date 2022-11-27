@@ -39,7 +39,6 @@ example_graph = Graph(
 
 
 class TestGraphOptimization:
-
     @example({"graph": example_graph, "colors": 2})
     @given(graph_coloring_params())
     @settings(deadline=None)
