@@ -1,7 +1,319 @@
 {
   "0": {
+    "name": "CQC",
+    "positions": "colors",
+    "diagonal": -5,
+    "one_node_many_positions": 10,
+    "non_edges": 10
+  },
+  "1": {
+    "name": "GCL",
+    "positions": "colors",
+    "diagonal": -5,
+    "one_node_many_positions": 10,
+    "edges": 10
+  },
+  "2": {
+    "name": "HTC",
+    "positions": "n",
+    "double_count_edges": "True",
+    "double_count_edges_cycles": "True",
+    "diagonal": -10,
+    "one_node_many_positions": 10,
+    "one_position_many_nodes": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycles": 5
+  },
+  "3": {
+    "name": "LGP",
+    "positions": "n",
+    "diagonal": -5,
+    "start_node_score": -5,
+    "terminal_node_score": -5,
+    "one_position_many_nodes": 10,
+    "one_node_many_positions": 5,
+    "edge_weights_factor": -1,
+    "invalid_traversal": 5,
+    "invalid_traversal_self": 5
+  },
+  "4": {
+    "name": "MCQ",
+    "positions": 1,
+    "diagonal": -5,
+    "non_edges": 10
+  },
+  "5": {
+    "name": "MCT",
     "positions": 1,
     "nodes_with_edges": -5,
     "edges": 10
+  },
+  "6": {
+    "name": "MIS",
+    "positions": 1,
+    "diagonal": -5,
+    "edges": 10
+  },
+  "7": {
+    "name": "MVC",
+    "positions": 1,
+    "diagonal": 5,
+    "nodes_with_edges": -5,
+    "edges": 5
+  },
+  "8": {
+    "name": "TSP",
+    "positions": "n",
+    "double_count_edges": "True",
+    "double_count_edges_cycles": "True",
+    "diagonal": -10,
+    "one_node_many_positions": 10,
+    "one_position_many_nodes": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycles": 5,
+    "edge_weights_factor": 10,
+    "edge_weights_cycles_factor": 10
+  },
+  "9": {
+    "name": "TSP_wo_onmp_constraint",
+    "positions": "n",
+    "double_count_edges": "True",
+    "double_count_edges_cycles": "True",
+    "diagonal": -10,
+    "one_position_many_nodes": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycles": 5,
+    "edge_weights_factor": 10,
+    "edge_weights_cycles_factor": 10
+  },
+  "10": {
+    "name": "LGP_wo_sandt_constraint",
+    "positions": "n",
+    "diagonal": -5,
+    "one_position_many_nodes": 10,
+    "one_node_many_positions": 5,
+    "edge_weights_factor": -1,
+    "invalid_traversal": 5,
+    "invalid_traversal_self": 5
+  },
+  "11": {
+    "name": "LGP_matching_TSP",
+    "positions": "n",
+    "diagonal": -5,
+    "one_position_many_nodes": 10,
+    "one_node_many_positions": 5,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": -1,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycles": 5
+  },
+  "12": {
+    "name": "TSP_with_sandt_constraint",
+    "positions": "n",
+    "double_count_edges": "True",
+    "double_count_edges_cycles": "True",
+    "start_node_score": -5,
+    "terminal_node_score": -5,
+    "diagonal": -10,
+    "one_node_many_positions": 10,
+    "one_position_many_nodes": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycles": 5,
+    "edge_weights_factor": 10,
+    "edge_weights_cycles_factor": 10
+  },
+  "13": {
+    "positions": 1,
+    "diagonal": 5,
+    "non_edges": -5
+  },
+  "14": {
+    "positions": 1,
+    "diagonal": -5,
+    "nodes_with_edges": -5,
+    "edges": 10,
+    "non_edges": -5
+  },
+  "15": {
+    "positions": 1,
+    "diagonal": 5
+  },
+  "16": {
+    "positions": 1,
+    "diagonal": 5,
+    "nodes_with_edges": 10,
+    "edges": 10,
+    "non_edges": 10
+  },
+  "17": {
+    "positions": 1,
+    "diagonal": -5,
+    "nodes_with_edges": 10
+  },
+  "18": {
+    "positions": 1,
+    "diagonal": 5,
+    "nodes_with_edges": -5,
+    "edges": -5
+  },
+  "19": {
+    "positions": 1,
+    "diagonal": -5,
+    "nodes_with_edges": 5,
+    "non_edges": -5
+  },
+  "20": {
+    "positions": "colors",
+    "start_node_score": -5,
+    "terminal_node_score": -5,
+    "diagonal": -10,
+    "one_node_many_positions": 5,
+    "one_position_many_nodes": 10,
+    "edges": 5,
+    "edge_weights_factor": 1,
+    "edge_weights_cycles_factor": -1,
+    "edge_weights_self_factor": 1
+  },
+  "21": {
+    "positions": "n",
+    "start_node_score": -5,
+    "terminal_node_score": -5,
+    "diagonal": -10,
+    "one_node_many_positions": 5,
+    "one_position_many_nodes": 10,
+    "edges": 5,
+    "edge_weights_factor": 1,
+    "edge_weights_cycles_factor": -1,
+    "edge_weights_self_factor": 1
+  },
+  "22": {
+    "positions": "colors",
+    "terminal_node_score": -5,
+    "diagonal": 5,
+    "one_position_many_nodes": 5,
+    "edges": 10,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": 1,
+    "edge_weights_self_factor": 1,
+    "non_edges": 5,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycle": 5,
+    "invalid_traversal_self": 5
+  },
+  "23": {
+    "positions": "n",
+    "terminal_node_score": -5,
+    "diagonal": 5,
+    "one_position_many_nodes": 5,
+    "edges": 10,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": 1,
+    "edge_weights_self_factor": 1,
+    "non_edges": 5,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycle": 5,
+    "invalid_traversal_self": 5
+  },
+  "24": {
+    "positions": "colors",
+    "start_node_score": 5,
+    "diagonal": -10,
+    "one_node_many_positions": 5,
+    "one_position_many_nodes": 10,
+    "edges": 10,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": -1,
+    "non_edges": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycle": 5,
+    "invalid_traversal_self": 5
+  },
+  "25": {
+    "positions": "n",
+    "start_node_score": 5,
+    "diagonal": -10,
+    "one_node_many_positions": 5,
+    "one_position_many_nodes": 10,
+    "edges": 10,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": -1,
+    "non_edges": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycle": 5,
+    "invalid_traversal_self": 5
+  },
+  "26": {
+    "positions": "colors",
+    "start_node_score": 5,
+    "terminal_node_score": -5,
+    "diagonal": -5,
+    "one_node_many_positions": 10,
+    "edge_weights_cycles_factor": 1,
+    "edge_weights_self_factor": 1,
+    "non_edges": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_self": 5
+  },
+  "27": {
+    "positions": "n",
+    "start_node_score": 5,
+    "terminal_node_score": -5,
+    "diagonal": -5,
+    "one_node_many_positions": 10,
+    "edge_weights_cycles_factor": 1,
+    "edge_weights_self_factor": 1,
+    "non_edges": 10,
+    "invalid_traversal": 5,
+    "invalid_traversal_self": 5
+  },
+  "28": {
+    "positions": "colors",
+    "start_node_score": 5,
+    "terminal_node_score": -5,
+    "diagonal": -10,
+    "one_position_many_nodes": 10,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": -1,
+    "non_edges": 5,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycle": 5,
+    "invalid_traversal_self": 5
+  },
+  "29": {
+    "positions": "n",
+    "start_node_score": 5,
+    "terminal_node_score": -5,
+    "diagonal": -10,
+    "one_position_many_nodes": 10,
+    "edge_weights_factor": -1,
+    "edge_weights_cycles_factor": -1,
+    "non_edges": 5,
+    "invalid_traversal": 5,
+    "invalid_traversal_cycle": 5,
+    "invalid_traversal_self": 5
+  },
+  "30": {
+    "positions": "colors",
+    "terminal_node_score": 5,
+    "diagonal": -10,
+    "one_node_many_positions": 5,
+    "one_position_many_nodes": 10,
+    "edges": 10,
+    "edge_weights_cycles_factor": 1,
+    "edge_weights_self_factor": -1,
+    "non_edges": 10,
+    "invalid_traversal_cycle": 5
+  },
+  "31": {
+    "positions": "n",
+    "terminal_node_score": 5,
+    "diagonal": -10,
+    "one_node_many_positions": 5,
+    "one_position_many_nodes": 10,
+    "edges": 10,
+    "edge_weights_cycles_factor": 1,
+    "edge_weights_self_factor": -1,
+    "non_edges": 10,
+    "invalid_traversal_cycle": 5
   }
 }
