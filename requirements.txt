@@ -6,5 +6,6 @@ dwave_qbsolv
 dwave-neal
 dwave-tabu
 pytest
+uqo
 hypothesis
 hypothesis_networkx
