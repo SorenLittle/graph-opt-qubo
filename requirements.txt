@@ -5,6 +5,7 @@ dimod
 dwave_qbsolv
 dwave-neal
 dwave-tabu
+pandas
 pytest
 uqo
 hypothesis

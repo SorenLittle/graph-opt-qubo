@@ -37,7 +37,9 @@ def solve(qubo, **kwargs):
     """Solve a qubo with quantum annealing"""
 
     problem = (
-        Qubo(get_uqo_config(), qubo).with_platform("dwave").with_solver("Advantage_system4.1")
+        Qubo(get_uqo_config(), qubo)
+        .with_platform("dwave")
+        .with_solver("Advantage_system4.1")
     )
 
     result = problem.solve(times=kwargs.get("repeats", 1)).sampleset.first
@@ -50,7 +52,9 @@ def find_embedding(qubo):
     """Find qubo embedding for quantum annealer"""
 
     problem = (
-        Qubo(get_uqo_config(), qubo).with_platform("dwave").with_solver("Advantage_system4.1")
+        Qubo(get_uqo_config(), qubo)
+        .with_platform("dwave")
+        .with_solver("Advantage_system4.1")
     )
     return problem.find_pegasus_embedding()
 
